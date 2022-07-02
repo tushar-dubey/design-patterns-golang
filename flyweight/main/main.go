@@ -13,4 +13,12 @@ func main() {
 	bft := NewBetterFormattedText(text)
 	bft.Range(19, 20).Capital = true
 	fmt.Println(bft.String())
+
+	// Using a normal user struct having a name
+	adarsh := NewUser("Adarsh Balak")
+	fmt.Println(adarsh.FullName)
+
+	// using a Flyweight User2 having a name
+	nalayak := NewUser2("Nalayak Balak")
+	fmt.Println(nalayak.FullName())
 }
