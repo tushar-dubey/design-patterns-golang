@@ -27,6 +27,8 @@ func (b *BankAccount) Withdraw(amount int) bool {
 type Command interface {
 	Call()
 	Undo()
+	Succeeded() bool
+	SetSucceeded(value bool)
 }
 
 type Action int
@@ -40,13 +42,21 @@ type BankAccountCommand struct {
 	BankAccount *BankAccount
 	Action      Action
 	Amount      int
-	Succeeded   bool
+	succeeded   bool
+}
+
+func (b *BankAccountCommand) Succeeded() bool {
+	return b.succeeded
+}
+
+func (b *BankAccountCommand) SetSucceeded(value bool) {
+	b.succeeded = value
 }
 
 func (b *BankAccountCommand) Undo() {
 	switch b.Action {
 	case Withdraw:
-		if b.Succeeded == true {
+		if b.succeeded == true {
 			b.BankAccount.Deposit(b.Amount)
 		}
 	case Deposit:
@@ -62,8 +72,8 @@ func (b *BankAccountCommand) Call() {
 	switch b.Action {
 	case Deposit:
 		b.BankAccount.Deposit(b.Amount)
-		b.Succeeded = true
+		b.succeeded = true
 	case Withdraw:
-		b.Succeeded = b.BankAccount.Withdraw(b.Amount)
+		b.succeeded = b.BankAccount.Withdraw(b.Amount)
 	}
 }
